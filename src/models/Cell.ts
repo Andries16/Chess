@@ -1,5 +1,5 @@
 import {Colors} from "./Colors";
-import {Figure} from "./figures/Figure";
+import {Figure, FigureNames} from "./figures/Figure";
 import {Board} from "./Board";
 
 export class Cell{
@@ -10,6 +10,8 @@ export class Cell{
     board: Board;
     available: boolean;
     id: number;
+    isAttack:boolean;
+    isAttacker:boolean;
 
     constructor(board: Board, x: number, y: number, color: Colors, figure: Figure | null) {
         this.x = x;
@@ -19,6 +21,8 @@ export class Cell{
         this.figure = figure;
         this.available = false;
         this.id = Math.random();
+        this.isAttack = false;
+        this.isAttacker = false;
     }
 
     isEmpty(){
@@ -88,7 +92,61 @@ export class Cell{
                 this.addLostFigure(target.figure);
             }
             target.setFigure(this.figure);
+            if(this === this.board.Attacked){
+                this.isAttack = false;
+                if(this.board.Attacker)this.board.Attacker.isAttacker = false;
+                this.board.Attacked = null;
+                this.board.Attacker = null;
+                this.board.isAttacked = false;
+            }
             this.figure = null;
+            var theKing = this.board.cells[0][0];
+            for(let i = 0;i<this.board.cells.length;i++)
+                for(let j = 0;j<8;j++)
+                    if(this.board.cells[i][j].figure?.name === FigureNames.KING 
+                        && this.board.cells[i][j].figure?.color !== target.figure?.color){
+                        theKing = this.board.cells[i][j];
+                        break;
+                    }
+            if(target.figure?.canAttack(theKing)){
+               theKing.isAttack = true;
+               target.isAttacker = true;
+               target.board.isAttacked = true;
+               target.board.Attacker = target;
+               target.board.Attacked = theKing;
+            };
+            for(let i = 0;i<8;i++)
+                 for(let j = 0;j<8;j++){
+                        let cell = this.board.cells[i][j];
+                        if(cell.isAttack){
+                            if(!cell.isAttacked()){
+                                cell.isAttack = false;
+                                if(cell.board.Attacker)cell.board.Attacker.isAttacker = false;
+                                cell.board.Attacked = null;
+                                cell.board.Attacker = null;
+                                cell.board.isAttacked = false;
+                               
+                            }
+                        }
+                    }
+            this.board.isDefeat(target);
         }
     }
+
+    canBeAttacked(target:Cell){
+        for(let i = 0;i<8;i++)
+            for(let j = 0;j<8;j++)
+                if(this.board.cells[i][j].figure?.color !== this.figure?.color 
+                    && this.board.cells[i][j].figure?.canAttack(target))return true;
+        return false;
+    }
+
+    isAttacked():boolean{
+        for(let i = 0;i<8;i++)
+        for(let j = 0;j<8;j++)
+            if(this.board.cells[i][j].figure?.color !== this.figure?.color 
+                && this.board.cells[i][j].figure?.canAttack(this))return true;
+          return false;
+    }
+
 }

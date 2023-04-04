@@ -15,7 +15,36 @@ export class Pawn extends Figure{
     }
 
     canMove(target: Cell): boolean {
-        if(!super.canMove(target)){
+        if(this.cell.board.isAttacked){
+            if(target == this.cell.board.Attacker && this.canAttack(this.cell.board.Attacker))
+            return true;
+            if( this.cell.board.Attacked?.figure?.color == this.color 
+                && super.canDefend(target)  && this.canAttack(target))
+                return true;
+        }else{
+            if(!super.canMove(target)){
+                return false;
+            };
+            const direction = this.cell.figure?.color === Colors.WHITE ? -1 : 1;
+            const firstStep = this.cell.figure?.color === Colors.WHITE ? -2 : 2;
+
+            if((target.y === this.cell.y + direction || this.isFirstStep
+                && (target.y === this.cell.y+firstStep))
+                && target.x == this.cell.x
+                && this.cell.board.getCell(target.x,target.y).isEmpty()
+            )return true
+
+            if(target.y === this.cell.y + direction
+                && (target.x == this.cell.x+1 || target.x ===this.cell.x-1)
+                && this.cell.isEnemy(target)
+            )return true
+        }
+        return  false
+    }
+
+
+    canAttack(target: Cell): boolean {
+        if(!super.canAttack(target)){
             return false;
         };
         const direction = this.cell.figure?.color === Colors.WHITE ? -1 : 1;
@@ -33,7 +62,6 @@ export class Pawn extends Figure{
         )return true
         return  false
     }
-
 
     moveFigure(target: Cell) {
         super.moveFigure(target);

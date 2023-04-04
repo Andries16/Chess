@@ -20,7 +20,7 @@ const BoardComponent: FC<BoardProps> = ({board,setBoard, currentPlayer, swapPlay
             swapPlayer();
             setSelectedCell(null);
         }else
-            if(cell.figure?.color == currentPlayer?.color)
+            if(cell.figure?.color === currentPlayer?.color)
                 setSelectedCell(cell);
     }
 
@@ -33,6 +33,26 @@ const BoardComponent: FC<BoardProps> = ({board,setBoard, currentPlayer, swapPlay
         updateBoard();
     }
 
+    function kingIsUnderAttack(){
+        var theKing;
+        for(let i = 0;i<board.cells.length;i++){
+            for(let j = 0;j<8;j++){
+                if(board.cells[i][j].figure?.name === "king" ){
+                    theKing = board.cells[i][j];
+                    if(theKing.isAttack){
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+        return false;    
+    }
+
+    function isOver(){
+        return board.isOver;
+    }
+
     function updateBoard(){
         const newBoard = board.getCopyBoard();
         setBoard(newBoard);
@@ -40,6 +60,8 @@ const BoardComponent: FC<BoardProps> = ({board,setBoard, currentPlayer, swapPlay
 
     return (
         <div>
+            <h1>{isOver() ? "Game Over":""}</h1>
+            <h1 style={{color:"red",paddingBottom:"50px",textAlign:"center"}}>{kingIsUnderAttack() ? "King is under Attack": ""}</h1>
             <h2>Player {currentPlayer?.color}</h2>
             <div className="board">
                 {board.cells.map((row,index) =>
