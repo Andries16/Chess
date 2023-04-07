@@ -7,17 +7,16 @@ import {Queen} from "./figures/Queen";
 import {Bishop} from "./figures/Bishop";
 import {Rook} from "./figures/Rook";
 import {Figure} from "./figures/Figure";
-import { Player } from "./Player";
 
 export class Board{
     cells : Cell[][] = [];
     lostBlackFigures:Figure[]=[];
     lostWhiteFigures:Figure[]=[];
-    isOver:boolean=false;
+    isOver:boolean = false;
     isAttacked:boolean = false;
     Attacker:Cell|null = null;
     Attacked:Cell|null = null;
-    Winner:Player|null = null;
+    Winner:Colors|undefined = undefined;
 
     public initCells(){
         for (let i = 0; i<8; i++){
@@ -88,21 +87,32 @@ export class Board{
         newBoard.cells = this.cells;
         newBoard.lostWhiteFigures = this.lostWhiteFigures;
         newBoard.lostBlackFigures = this.lostBlackFigures;
+        newBoard.isOver = this.isOver;
+        newBoard.Attacked = this.Attacked;
+        newBoard.Attacker = this.Attacker;
+        newBoard.Winner = this.Winner;
+        newBoard.isAttacked = this.isAttacked;
         return newBoard;
     }
-
-    public isDefeat(target:Cell):boolean{
+    
+    public isDefeat(color:Colors | undefined):boolean{
+        if(color)
         for(let i=0;i<8;i++)
                 for(let j=0;j<8;j++)
-                    if(this.cells[i][j].figure?.color !== target.figure?.color){
+                    if(this.cells[i][j].figure?.color == color){
                     let cell = this.cells[i][j];
                     for(let g = 0;g<8;g++)
                         for(let h=0;h<8;h++)
                             if(cell.figure?.canMove(this.cells[g][h]))
-                                    return false;
-                    }
+                                    return false;                 
+                            }
         this.isOver = true;
-        console.log(this.isOver);
+        let Color;
+            switch(color){
+                case "white":  Color = Colors.BLACK;break;
+                case "black":  Color = Colors.WHITE;break;
+        }
+        this.Winner = Color;
         return true;
     }
 

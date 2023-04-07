@@ -85,6 +85,14 @@ export class Cell{
             : this.board.lostWhiteFigures.push(figure)
     }
 
+    canAttack(target:Cell, theKing:Cell){
+        theKing.isAttack = true;
+        target.isAttacker = true;
+        target.board.isAttacked = true;
+        target.board.Attacker = target;
+        target.board.Attacked = theKing;
+    }
+
     moveFigure(target:Cell){
         if(this.figure && this.figure?.canMove(target)){
             this.figure?.moveFigure(target);
@@ -109,11 +117,7 @@ export class Cell{
                         break;
                     }
             if(target.figure?.canAttack(theKing)){
-               theKing.isAttack = true;
-               target.isAttacker = true;
-               target.board.isAttacked = true;
-               target.board.Attacker = target;
-               target.board.Attacked = theKing;
+              this.canAttack(target,theKing);
             };
             for(let i = 0;i<8;i++)
                  for(let j = 0;j<8;j++){
@@ -129,7 +133,12 @@ export class Cell{
                             }
                         }
                     }
-            this.board.isDefeat(target);
+            let color;
+            switch(target.figure?.color){
+                case "white":  color = Colors.BLACK;break;
+                case "black":  color = Colors.WHITE;break;
+            }
+           target.board.isDefeat(color);
         }
     }
 

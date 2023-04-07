@@ -40,6 +40,7 @@ const BoardComponent: FC<BoardProps> = ({board,setBoard, currentPlayer, swapPlay
                 if(board.cells[i][j].figure?.name === "king" ){
                     theKing = board.cells[i][j];
                     if(theKing.isAttack){
+                        board.Attacked = theKing;
                         return true;
                     }
                     break;
@@ -49,20 +50,34 @@ const BoardComponent: FC<BoardProps> = ({board,setBoard, currentPlayer, swapPlay
         return false;    
     }
 
-    function isOver(){
-        return board.isOver;
-    }
-
     function updateBoard(){
         const newBoard = board.getCopyBoard();
         setBoard(newBoard);
     }
 
+    function isOver(){
+        board.isDefeat(currentPlayer?.color);
+        return board.isOver;
+    }
+
+    function capitalize(s:string)
+    {
+        return s && s[0].toUpperCase() + s.slice(1);
+    }
+
+    function locationRestart(){
+        window.location.reload();
+    }
+
     return (
-        <div>
-            <h1>{isOver() ? "Game Over":""}</h1>
-            <h1 style={{color:"red",paddingBottom:"50px",textAlign:"center"}}>{kingIsUnderAttack() ? "King is under Attack": ""}</h1>
-            <h2>Player {currentPlayer?.color}</h2>
+        <div> 
+            <div className='inFront' style={isOver() ? {left:"0"}:{}}>
+                <h1>Game Over !!</h1>
+                <h1>{board.Winner+" is the "}<span style={{color:"lightgreen"}}> Winner</span></h1>
+                <button className='restart' onClick={locationRestart}>Restart game</button>
+            </div>
+            <h1 style={{color:"coral",paddingBottom:"50px",textAlign:"center"}}>{kingIsUnderAttack() && !isOver() && board.Attacked && board.Attacked.figure ? capitalize(board.Attacked?.figure.color)+" king is under Attack": ""} </h1>
+            <h2>{!isOver() && currentPlayer ? "Player "+currentPlayer?.color : ""}</h2>
             <div className="board">
                 {board.cells.map((row,index) =>
                     <React.Fragment key={index}>

@@ -30,13 +30,15 @@ function App() {
 
   return (
     <div className="app">
-        <BoardComponent
-            board={board}
-            setBoard={setBoard}
-            currentPlayer={currentPlayer}
-            swapPlayer={swapPlayer}
-        />
-        <div>
+        <div className='w-75'>
+            <BoardComponent
+                board={board}
+                setBoard={setBoard}
+                currentPlayer={currentPlayer}
+                swapPlayer={swapPlayer}
+            />
+        </div>
+        <div className="w-25">
             <LostFigures title="White figures" figures={board.lostWhiteFigures}/>
             <LostFigures title="Black figures" figures={board.lostBlackFigures}/>
 

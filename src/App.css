@@ -3,6 +3,10 @@
     margin: 0;
 
 }
+body{
+    color: white;
+    background-color: rgb(31, 31, 31);
+}
 
 .app{
     width: 100vw;
@@ -13,48 +17,116 @@
 }
 
 .board{
-    width: calc(64px * 8);
-    height: calc(64px * 8);
+    width: calc(100px * 8);
+    height: calc(100px * 8);
     display: flex;
     flex-wrap: wrap;
 }
 
 .cell{
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height:100px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.5s;
 }
 
 .cell img{
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     position: relative;
+    transition: all 0.5s;
 }
 
 .black{
-    background-color: #3058d7;
+    background-color: #676767;
 }
 
 .white{
-    background-color: #fcc4a5;
+    background-color: #b7b7b7;
 }
 
 .selected{
-    background-color: #ffa600;
+    background-color: #c79e73;
 }
 
 .available{
     height: 12px;
     width: 12px;
     border-radius: 50%;
-    background-color: chartreuse;
+    background-color: rgb(179, 242, 183);
 }
 
 .lost{
     height: calc(50vh - 60px);
     padding: 30px;
-    margin-left: 50px;
-    background-color: lightblue;
+    margin-left: 150px;
+    color: rgb(46, 46, 46);
+    background-color: rgb(255, 255, 255);
+}
+.w-75{
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.w-25{
+    width: 25%;
+}
+
+.lostfigurerow{
+    padding-top: 10px;
+    border-left: 1px solid black ;
+    display: flex;
+    width: 75%;
+    align-items: stretch;
+    justify-content: space-around;
+}
+
+.titleLF{
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
+}
+
+.figurename{
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px 0px;
+    text-transform: capitalize;
+}
+
+.restart{
+    margin-top: 200px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    font-size: large;
+    color: black;
+    font-weight: bolder;
+    transition: all 0.5s;
+}
+
+.restart:hover{
+    background-color: rgb(0, 0, 0);
+    border: 1px solid rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.inFront{
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.932);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    left: -100%;
+    top: 0;
+    z-index: 100;
+    transition: all 0.8s;
 }
