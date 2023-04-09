@@ -121,6 +121,13 @@ export class Cell{
               this.canAttack(target,theKing);
             };
             for(let i = 0;i<8;i++)
+            for(let j = 0;j<8;j++)
+                if(this.board.cells[i][j].figure?.color === target.figure?.color  && this.board.cells[i][j].figure?.canAttack(theKing)){
+                    this.canAttack(this.board.cells[i][j],theKing);
+                    break;
+                }
+
+            for(let i = 0;i<8;i++)
                  for(let j = 0;j<8;j++){
                         let cell = this.board.cells[i][j];
                         if(cell.isAttack){
