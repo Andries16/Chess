@@ -29,26 +29,26 @@ export class Cell{
         return this.figure === null;
     }
 
-    isEmptyVertical(target: Cell):boolean{
+    isEmptyVertical(target: Cell, without:Cell | null = null):boolean{
         if(this.x !== target.x)
             return false
 
         const  min = Math.min(this.y, target.y);
         const  max = Math.max(this.y, target.y);
         for(let i=min+1;i<max;i++){
-            if(!this.board.getCell(this.x,i).isEmpty())
+            if(!this.board.getCell(this.x,i).isEmpty() &&  (without ? this.board.getCell(this.x,i)!==without:true))
                 return false;
         }
         return true
     }
 
-    isEmptyHorizontal(target: Cell):boolean{
+    isEmptyHorizontal(target: Cell, without:Cell | null = null):boolean{
         if(this.y !== target.y)
             return false
         const  min = Math.min(this.x, target.x);
         const  max = Math.max(this.x, target.x);
         for(let i=min+1;i<max;i++){
-            if(!this.board.getCell(i,this.y).isEmpty())
+            if(!this.board.getCell(i,this.y).isEmpty()&&  (without ? this.board.getCell(i,this.y)!==without:true))
                 return false;
         }
         return true;
@@ -61,15 +61,16 @@ export class Cell{
         return false;
     }
 
-    isEmptyDiagonal(target: Cell):boolean{
+    isEmptyDiagonal(target: Cell, without:Cell | null = null):boolean{
         const absX = Math.abs(target.x - this.x);
         const absY = Math.abs(target.y - this.y);
         if(absY !== absX) return false;
         const dy = this.y < target.y ? 1 : -1
         const dx = this.x < target.x ? 1 : -1
 
+
         for (let i = 1; i < absY;i++)
-            if(!this.board.getCell(this.x + dx*i, this.y+dy*i).isEmpty())
+            if(!this.board.getCell(this.x + dx*i, this.y+dy*i).isEmpty() &&  (without ? this.board.getCell(this.x + dx*i, this.y+dy*i)!==without:true))
                 return false;
         return true;
     }
@@ -146,7 +147,8 @@ export class Cell{
         for(let i = 0;i<8;i++)
             for(let j = 0;j<8;j++)
                 if(this.board.cells[i][j].figure?.color !== this.figure?.color 
-                    && this.board.cells[i][j].figure?.canAttack(target))return true;
+                    && this.board.cells[i][j].figure?.canAttack(target,true) && this.board.cells[i][j] !== target)
+                        return true;
         return false;
     }
 

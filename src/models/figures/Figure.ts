@@ -31,19 +31,20 @@ export class Figure{
     }
 
     canMove(target: Cell) : boolean{
-      if(target.figure?.color == this.color)
+      if(target.figure?.color === this.color)
           return false
-      if(target.figure?.name == FigureNames.KING)
+      if(target.figure?.name === FigureNames.KING)
           return false
 
-        
+      if(this.name != FigureNames.KING){
       let Attacker : Cell | null = null;
       let king : Cell | null = null;
       for(let i = 0;i<8;i++)
           for(let j = 0;j<8;j++){
               if(this.cell.board.cells[i][j].figure?.color !== this.color 
                   && this.cell.board.cells[i][j].figure?.canAttack(this.cell))Attacker = this.cell.board.cells[i][j];
-              if( this.cell.board.cells[i][j].figure?.name=="king" && this.cell.board.cells[i][j].figure?.color ==this.color)king =this.cell.board.cells[i][j];
+              if( this.cell.board.cells[i][j].figure?.name=="king" && this.cell.board.cells[i][j].figure?.color ===this.color)
+                    king =this.cell.board.cells[i][j];
                 }
 
                 if(!Attacker) return true;
@@ -54,6 +55,7 @@ export class Figure{
                             if(this.cell.isEmptyVertical(king)) {
                                 const  min = Math.min(Attacker.y, king.y);
                                 const  max = Math.max(Attacker.y, king.y);
+                                if(!Attacker.isEmptyVertical(king,this.cell))return true;
                                 for(let i=min+1;i<max;i++){
                                     let cell = this.cell.board.getCell(Attacker.x,i)
                                     if(cell.isEmpty())
@@ -66,6 +68,7 @@ export class Figure{
                             if( this.cell.isEmptyHorizontal(king)) {
                                 const  min = Math.min(Attacker.x, king.x);
                                 const  max = Math.max(Attacker.x, king.x);
+                                if(!Attacker.isEmptyHorizontal(king,this.cell))return true;
                                 for(let i=min+1;i<max;i++){
                                     let cell =this.cell.board.getCell(i,Attacker.y)
                                     if(cell.isEmpty())
@@ -76,13 +79,14 @@ export class Figure{
                             if(this.cell.isEmptyDiagonal(king)){
                                 const absX = Math.abs(king.x - Attacker.x);
                                 const absY = Math.abs(king.y - Attacker.y);
-                                if(absY !== absX) return false;
+                                if(absY !== absX) return true;
                                 const dy = Attacker.y < king.y ? 1 : -1
                                 const dx = Attacker.x < king.x ? 1 : -1
-                        
+                                
+                                if(!Attacker.isEmptyDiagonal(king,this.cell))return true;
                                 for (let i = 1; i < absY;i++){
                                     let cell = this.cell.board.getCell(Attacker.x + dx*i, Attacker.y+dy*i)
-                                    if(cell.isEmpty())
+                                    if(cell.isEmpty() ) 
                                         posibleCells.push(cell);
                                 }
                             }
@@ -92,6 +96,7 @@ export class Figure{
                     if(this.cell.isEmptyVertical(king)) {
                         const  min = Math.min(Attacker.y, king.y);
                         const  max = Math.max(Attacker.y, king.y);
+                        if(!Attacker.isEmptyVertical(king,this.cell))return true;
                         for(let i=min+1;i<max;i++){
                             let cell = this.cell.board.getCell(Attacker.x,i)
                             if(cell.isEmpty())
@@ -101,9 +106,11 @@ export class Figure{
                     
                     
                     
+                    
                     if( this.cell.isEmptyHorizontal(king)) {
                         const  min = Math.min(Attacker.x, king.x);
                         const  max = Math.max(Attacker.x, king.x);
+                        if(!Attacker.isEmptyHorizontal(king,this.cell))return true;
                         for(let i=min+1;i<max;i++){
                             let cell =this.cell.board.getCell(i,Attacker.y)
                             if(cell.isEmpty())
@@ -112,19 +119,20 @@ export class Figure{
                     }
                     break;
                     case "bishop" : 
-                        if(this.cell.isEmptyDiagonal(king)){
-                            const absX = Math.abs(king.x - Attacker.x);
-                            const absY = Math.abs(king.y - Attacker.y);
-                            if(absY !== absX) return false;
-                            const dy = Attacker.y < king.y ? 1 : -1
-                            const dx = Attacker.x < king.x ? 1 : -1
-                    
-                            for (let i = 1; i < absY;i++){
-                                let cell = this.cell.board.getCell(Attacker.x + dx*i, Attacker.y+dy*i)
-                                if(cell.isEmpty())
-                                    posibleCells.push(cell);
-                            }
+                    if(this.cell.isEmptyDiagonal(king)){
+                        const absX = Math.abs(king.x - Attacker.x);
+                        const absY = Math.abs(king.y - Attacker.y);
+                        if(absY !== absX) return true;
+                        const dy = Attacker.y < king.y ? 1 : -1
+                        const dx = Attacker.x < king.x ? 1 : -1
+                        
+                        if(!Attacker.isEmptyDiagonal(king,this.cell))return true;
+                        for (let i = 1; i < absY;i++){
+                            let cell = this.cell.board.getCell(Attacker.x + dx*i, Attacker.y+dy*i)
+                            if(cell.isEmpty() ) 
+                                posibleCells.push(cell);
                         }
+                    }
 
                     break;
                     default : return true;
@@ -132,10 +140,14 @@ export class Figure{
     
             for(let i=0;i<posibleCells.length;i++)
                 if(target === posibleCells[i] || target === Attacker) return true;
-      return false
+        
+            if(posibleCells.length) return false;
+            return true;
+        }
+        return true;
     }
 
-    canAttack(target:Cell) :boolean{
+    canAttack(target:Cell, isTest:boolean = false) :boolean{
         return true
     }
     moveFigure(target: Cell){

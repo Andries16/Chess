@@ -43,7 +43,7 @@ export class Pawn extends Figure{
     }
 
 
-    canAttack(target: Cell): boolean {
+    canAttack(target: Cell,isTest:boolean = false): boolean {
         if(!super.canAttack(target)){
             return false;
         };
@@ -57,8 +57,8 @@ export class Pawn extends Figure{
         )return true
 
         if(target.y === this.cell.y + direction
-            && (target.x == this.cell.x+1 || target.x ===this.cell.x-1)
-            && this.cell.isEnemy(target)
+            && (target.x === this.cell.x+1 || target.x ===this.cell.x-1)
+            && (isTest ? true : this.cell.isEnemy(target))
         )return true
         return  false
     }
