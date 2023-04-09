@@ -3,6 +3,7 @@ import {Colors} from "../Colors";
 import {Cell} from "../Cell";
 import whiteLogo from "../../assets/white-pawn.png";
 import blackLogo from "../../assets/black-pawn.png";
+import { dir } from "console";
 
 export class Pawn extends Figure{
 
@@ -29,7 +30,7 @@ export class Pawn extends Figure{
             const firstStep = this.cell.figure?.color === Colors.WHITE ? -2 : 2;
 
             if((target.y === this.cell.y + direction || this.isFirstStep
-                && (target.y === this.cell.y+firstStep))
+                && (target.y === this.cell.y+firstStep && this.cell.board.getCell(target.x,this.cell.y+direction).isEmpty()))
                 && target.x == this.cell.x
                 && this.cell.board.getCell(target.x,target.y).isEmpty()
             )return true
