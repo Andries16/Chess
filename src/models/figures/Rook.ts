@@ -31,13 +31,13 @@ export class Rook extends Figure {
         return false
     }
 
-    canAttack(target: Cell): boolean {
+    canAttack(target: Cell,without:Cell | null = null): boolean {
         if(!super.canAttack(target)){
             return false;
         };
-        if(this.cell.isEmptyVertical(target))
+        if(without ? this.cell.isEmptyVertical(target,without) : this.cell.isEmptyVertical(target))
             return true
-        if(this.cell.isEmptyHorizontal(target))
+        if(without ? this.cell.isEmptyHorizontal(target,without) : this.cell.isEmptyHorizontal(target))
             return true
         return false
     }

@@ -147,7 +147,7 @@ export class Figure{
         return true;
     }
 
-    canAttack(target:Cell, isTest:boolean = false) :boolean{
+    canAttack(target:Cell, without:Cell | null = null, isTest:boolean = false) :boolean{
         return true
     }
     moveFigure(target: Cell){

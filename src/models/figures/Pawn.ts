@@ -44,7 +44,7 @@ export class Pawn extends Figure{
     }
 
 
-    canAttack(target: Cell,isTest:boolean = false): boolean {
+    canAttack(target: Cell,without:Cell | null = null,isTest:boolean = false): boolean {
         if(!super.canAttack(target)){
             return false;
         };

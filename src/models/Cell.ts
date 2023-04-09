@@ -147,7 +147,7 @@ export class Cell{
         for(let i = 0;i<8;i++)
             for(let j = 0;j<8;j++)
                 if(this.board.cells[i][j].figure?.color !== this.figure?.color 
-                    && this.board.cells[i][j].figure?.canAttack(target,true) && this.board.cells[i][j] !== target)
+                    && this.board.cells[i][j].figure?.canAttack(target,this,true) && this.board.cells[i][j] !== target)
                         return true;
         return false;
     }

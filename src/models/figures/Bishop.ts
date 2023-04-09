@@ -30,12 +30,12 @@ export class Bishop extends Figure{
         return false
     }
 
-    canAttack(target: Cell): boolean {
+    canAttack(target: Cell,without:Cell | null = null): boolean {
         if(!super.canAttack(target)){
             return false;
         };
-        if(this.cell.isEmptyDiagonal(target))
-            return true;
+        if(without ? this.cell.isEmptyDiagonal(target,without) :this.cell.isEmptyDiagonal(target))
+            return true
         return false
     }
 }
