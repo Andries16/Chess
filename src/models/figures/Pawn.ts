@@ -54,6 +54,7 @@ export class Pawn extends Figure{
             && (target.y === this.cell.y+firstStep))
             && target.x == this.cell.x
             && this.cell.board.getCell(target.x,target.y).isEmpty()
+            && !isTest
         )return true
 
         if(target.y === this.cell.y + direction
